@@ -61,7 +61,7 @@ export async function createInvoice(prevState: State, formData: FormData) {
     `;
   } catch (error) {
     return {
-      message: 'Database Error: Failed to Create Invoice.',
+      message: `Database Error: Failed to Create Invoice. Error: ${error}`,
     }
   }
 
@@ -100,7 +100,7 @@ export async function updateInvoice(
     `;
   } catch (error) {
     return {
-      message: 'Database Error: Failed to Update Invoice.',
+      message: `Database Error: Failed to Update Invoice. Error: ${error}`,
     }
   }
 
@@ -117,7 +117,7 @@ export async function deleteInvoice(id: string) {
     return { message: 'Deleted Invoice.' };
   } catch (error) {
     return {
-      message: 'Database Error: Failed to Delete Invoice.',
+      message: `Database Error: Failed to Delete Invoice. Error: ${error}`,
     }
   }
 }
