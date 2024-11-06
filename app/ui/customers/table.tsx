@@ -51,8 +51,14 @@ export default async function CustomersTable({
                       <p className="font-medium">{customer.total_paid}</p>
                     </div>
                   </div>
-                  <div className="pt-4 text-sm">
-                    <p>{customer.total_invoices} invoices</p>
+                  <div className="flex w-full justify-between pt-4 text-sm">
+                    <div>
+                      <p>{customer.total_invoices} invoice{customer.total_invoices > 1 ? 's' : ''}</p>
+                    </div>
+                    <div className="flex justify-end gap-2">
+                      <UpdateCustomer id={customer.id} />
+                      <DeleteCustomer id={customer.id} />
+                    </div>
                   </div>
                 </div>
               ))}
