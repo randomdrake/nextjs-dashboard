@@ -46,11 +46,28 @@ const CustomerFormSchema = z.object({
     }),
 });
 
+const CustomerEditFormSchema = z.object({
+  id: z.string(),
+  name: z.string({
+    invalid_type_error: 'Please enter a name.',
+  }),
+  email: z
+    .string({
+      invalid_type_error: 'Please enter an email.',
+    })
+    .email({ message: 'Please enter a valid email address.' }),
+  profilePhoto: z
+    .instanceof(File)
+    .refine((file) => file.size < 4.9 * 1024 * 1024, {
+      message: 'Please upload a profile file smaller than 4.9MB.',
+    })
+});
+
 const CreateInvoice = InvoiceFormSchema.omit({ id: true, date: true });
 const UpdateInvoice = InvoiceFormSchema.omit({ id: true, date: true });
 
 const CreateCustomer = CustomerFormSchema.omit({ id: true });
-const UpdateCustomer = CustomerFormSchema.omit({ id: true });
+const UpdateCustomer = CustomerEditFormSchema.omit({ id: true });
 
 export type State = {
   errors?: {
@@ -221,6 +238,7 @@ export async function updateCustomer(
   const validatedFields = UpdateCustomer.safeParse({
     name: formData.get('name'),
     email: formData.get('email'),
+    profilePhoto: formData.get('profilePhoto') as File,
   });
 
   if (!validatedFields.success) {
@@ -230,14 +248,39 @@ export async function updateCustomer(
     };
   }
 
-  const { name, email } = validatedFields.data;
+  const customer = await fetchCustomerById(id);
+  if (!customer) {
+    return { message: 'Customer not found.' };
+  }
 
-  console.log('Updating customer:', { id, name, email });
+  const { name, email, profilePhoto } = validatedFields.data;
+
+  let imageUrl = customer.image_url;
+
+  // If a new profile photo was uploaded, delete the old one
+  if (profilePhoto.size > 0) {
+    try {
+      await del(customer.image_url);
+    } catch (error) {
+      return {
+        message: `Failed to Delete Old Profile Image. Error: ${error}`,
+      }
+    }
+
+    console.log('Handling file upload:', profilePhoto.name);
+    const blob = await put(profilePhoto.name, profilePhoto, {
+      access: 'public',
+    });
+
+    imageUrl = blob.url;
+  }
+
+  console.log('Updating customer:', { id, name, email, imageUrl });
 
   try {
     await sql`
       UPDATE customers
-      SET name = ${name}, email = ${email}
+      SET name = ${name}, email = ${email}, image_url = ${imageUrl}
       WHERE id = ${id}
     `;
   } catch (error) {
