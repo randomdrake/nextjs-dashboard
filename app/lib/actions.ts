@@ -20,7 +20,11 @@ const InvoiceFormSchema = z.object({
   status: z.enum(['pending', 'paid'], {
     invalid_type_error: 'Please select an invoice status.',
   }),
-  date: z.string(),
+  date: z
+    .string({
+      invalid_type_error: 'Please select a date.',
+    })
+    .date('Please select a valid date.'),
 });
 
 const CustomerFormSchema = z.object({
@@ -63,8 +67,8 @@ const CustomerEditFormSchema = z.object({
     })
 });
 
-const CreateInvoice = InvoiceFormSchema.omit({ id: true, date: true });
-const UpdateInvoice = InvoiceFormSchema.omit({ id: true, date: true });
+const CreateInvoice = InvoiceFormSchema.omit({ id: true });
+const UpdateInvoice = InvoiceFormSchema.omit({ id: true });
 
 const CreateCustomer = CustomerFormSchema.omit({ id: true });
 const UpdateCustomer = CustomerEditFormSchema.omit({ id: true });
@@ -76,6 +80,7 @@ export type State = {
     status?: string[];
     name?: string[];
     email?: string[];
+    date?: string[];
   };
   message: string;
 };
@@ -146,6 +151,7 @@ export async function updateInvoice(
     customerId: formData.get('customerId'),
     amount: formData.get('amount'),
     status: formData.get('status'),
+    date: formData.get('date'),
   });
 
   if (!validatedFields.success) {
@@ -155,15 +161,15 @@ export async function updateInvoice(
     };
   }
 
-  const { customerId, amount, status } = validatedFields.data;
+  const { customerId, amount, status, date } = validatedFields.data;
   const amountInCents = amount * 100;
 
-  console.log('Updating invoice:', { id, customerId, amountInCents, status });
+  console.log('Updating invoice:', { id, customerId, amountInCents, status, date });
 
   try {
     await sql`
       UPDATE invoices
-      SET customer_id = ${customerId}, amount = ${amountInCents}, status = ${status}
+      SET customer_id = ${customerId}, amount = ${amountInCents}, status = ${status}, date = ${date}
       WHERE id = ${id}
     `;
   } catch (error) {

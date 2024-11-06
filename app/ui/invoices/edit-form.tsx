@@ -4,6 +4,7 @@ import { CustomerField, InvoiceForm } from '@/app/lib/definitions';
 import {
   CheckIcon,
   ClockIcon,
+  CalendarIcon,
   CurrencyDollarIcon,
   UserCircleIcon,
 } from '@heroicons/react/24/outline';
@@ -23,6 +24,8 @@ export default function EditInvoiceForm({
   const updateInvoiceWithId = updateInvoice.bind(null, invoice.id);
   const [state, formAction] = useActionState(updateInvoiceWithId, initialState);
 
+  console.log(invoice);
+
   return (
     <form action={formAction}>
       <input type="hidden" name="id" value={invoice.id} />
@@ -30,7 +33,7 @@ export default function EditInvoiceForm({
         {/* Customer Name */}
         <div className="mb-4">
           <label htmlFor="customer" className="mb-2 block text-sm font-medium">
-            Choose customer
+            Choose a customer
           </label>
           <div className="relative">
             <select
@@ -91,6 +94,34 @@ export default function EditInvoiceForm({
             ))}
         </div>
 
+        {/* Invoice Date */}
+        <div className="mb-4">
+          <label htmlFor="date" className="mb-2 block text-sm font-medium">
+            Set the invoice date
+          </label>
+          <div className="relative mt-2 rounded-md">
+            <div className="relative">
+              <input
+                id="date"
+                name="date"
+                type="date"
+                defaultValue={invoice.date}
+                className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+                aria-describedby="date-error"
+              />
+              <CalendarIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+            </div>
+          </div>
+        </div>
+        <div id="date-error" aria-live="polite" aria-atomic="true">
+          {state.errors?.date &&
+            state.errors.date.map((error: string) => (
+              <p className="mt-2 mb-2 text-sm text-red-500" key={error}>
+                {error}
+              </p>
+            ))}
+        </div>
+
         {/* Invoice Status */}
         <fieldset>
           <legend className="mb-2 block text-sm font-medium">
@@ -134,6 +165,7 @@ export default function EditInvoiceForm({
               </div>
             </div>
           </div>
+
           <div id="status-error" aria-live="polite" aria-atomic="true">
             {state.errors?.status &&
               state.errors.status.map((error: string) => (
