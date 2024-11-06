@@ -35,11 +35,14 @@ const CustomerFormSchema = z.object({
     .email({ message: 'Please enter a valid email address.' }),
   profilePhoto: z
     .instanceof(File)
-    .refine((file) => file.size < 4900000, {
+    .refine((file) => file.size < 4.9 * 1024 * 1024, {
       message: 'Please upload a profile file smaller than 4.9MB.',
     })
     .refine((file) => file.size > 0, {
       message: 'Please upload a profile file.',
+    })
+    .refine((file) => file.type.startsWith('image/'), {
+      message: 'Please upload an image file.',
     }),
 });
 
