@@ -2,11 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import {
-  EnvelopeIcon,
-  UserCircleIcon,
-  CameraIcon,
-} from '@heroicons/react/24/outline';
+import { EnvelopeIcon, UserCircleIcon } from '@heroicons/react/24/outline';
 import { Button } from '@/app/ui/button';
 import { updateCustomer, State } from '@/app/lib/actions';
 import { useActionState } from 'react';
