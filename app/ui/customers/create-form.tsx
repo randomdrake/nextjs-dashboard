@@ -27,7 +27,7 @@ export default function Form() {
                 id="name"
                 name="name"
                 type="text"
-                placeholder="Enter full name"
+                placeholder="Jane Doe"
                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
                 aria-describedby="name-error"
               />
@@ -54,6 +54,7 @@ export default function Form() {
                 id="email"
                 name="email"
                 type="email"
+                placeholder="email@example.com"
                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
                 aria-describedby="email-error"
               />
