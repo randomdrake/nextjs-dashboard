@@ -93,12 +93,12 @@ export default function Form({
                 aria-describedby="profilePhoto-error"
                 required
               />
-                <Image className="rounded-full absolute left-2 top-1/2 h-8 w-8 -translate-y-1/2"
-                  src={customer.image_url}
-                  alt={`${customer.name}'s profile picture`}
-                  width={28}
-                  height={28}
-                />
+              <Image className="rounded-full absolute left-2 top-1/2 h-8 w-8 -translate-y-1/2"
+                src={customer.image_url}
+                alt={`${customer.name}'s profile picture`}
+                width={28}
+                height={28}
+              />
             </div>
           </div>
         </div>
