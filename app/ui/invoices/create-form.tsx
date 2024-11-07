@@ -1,6 +1,7 @@
 'use client';
 
-import { CustomerField } from '@/app/lib/definitions';
+import Image from 'next/image';
+import { CustomerField, Customer } from '@/app/lib/definitions';
 import Link from 'next/link';
 import {
   CalendarIcon,
@@ -11,11 +12,47 @@ import {
 } from '@heroicons/react/24/outline';
 import { Button } from '@/app/ui/button';
 import { createInvoice, State } from '@/app/lib/actions';
-import { useActionState } from 'react';
+import { useActionState, useState } from 'react';
 
 export default function Form({ customers }: { customers: CustomerField[] }) {
   const initialState: State = { message: "", errors: {} };
   const [state, formAction] = useActionState(createInvoice, initialState);
+
+  const initialCustomer: Customer = {
+    id: "",
+    name: "Jane Doe",
+    email: "",
+    image_url: "https://www.gravatar.com/avatar/00000000000000000000000000000000",
+  };
+
+  const [selectedCustomer, setSelectedCustomer] = useState(initialCustomer);
+
+  const handleCustomerChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedCustomerId = event.target.value;
+    fetch(`/api/customers/${selectedCustomerId}`)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((customer: Customer) => {
+        setSelectedCustomer(customer);
+
+        const userCircleIcon = document.getElementById('user-circle-icon');
+        if (userCircleIcon) {
+          userCircleIcon.remove();
+        }
+
+        const customerImage = document.getElementById('customer-image');
+        if (customerImage) {
+          customerImage.classList.remove('hidden');
+        }
+      })
+      .catch((error) => {
+        console.error('Error fetching customer:', error);
+      });
+  };
 
   return (
     <form action={formAction}>
@@ -32,6 +69,7 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
               className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
               defaultValue=""
               aria-describedby="customer-error"
+              onChange={handleCustomerChange}
               required
             >
               <option value="" disabled>
@@ -43,7 +81,18 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
                 </option>
               ))}
             </select>
-            <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
+            <UserCircleIcon
+              id="user-circle-icon"
+              className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" 
+            />
+            <Image
+              id="customer-image"
+              className="hidden rounded-full absolute left-2 top-1/2 h-7 w-7 -translate-y-1/2"
+              src={selectedCustomer?.image_url}
+              alt={`${selectedCustomer?.name}'s profile picture`}
+              width={28}
+              height={28}
+            />
           </div>
         </div>
         <div id="customer-error" aria-live="polite" aria-atomic="true">
