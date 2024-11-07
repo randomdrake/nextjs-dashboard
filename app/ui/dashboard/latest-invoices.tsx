@@ -30,9 +30,9 @@ export default async function LatestInvoices() {
                   <Image
                     src={invoice.image_url}
                     alt={`${invoice.name}'s profile picture`}
-                    className="mr-4 rounded-full"
-                    width={32}
-                    height={32}
+                    className="mr-4 rounded-full w-8 h-8"
+                    width={28}
+                    height={28}
                   />
                   <div className="min-w-0">
                     <p className="truncate text-sm font-semibold md:text-base">
