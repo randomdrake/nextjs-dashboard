@@ -1,4 +1,4 @@
-# NextJS Dashboard
+# Next.js Dashboard
 
 ![Recording](https://github.com/randomdrake/nextjs-dashboard/blob/main/public/recording.gif?raw=true)
 
