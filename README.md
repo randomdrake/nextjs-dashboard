@@ -2,7 +2,7 @@
 
 ![Recording](https://github.com/randomdrake/nextjs-dashboard/blob/main/public/recording.gif?raw=true)
 
-This is my implementation of the Next JS dashboard with some fixes and extras from the NextJS tutorial that can be found here:
+This is my implementation of the Next.js dashboard with some fixes and extras from the Next.js tutorial that can be found here:
 
 [https://nextjs.org/learn/dashboard-app](https://nextjs.org/learn/dashboard-app)
 
