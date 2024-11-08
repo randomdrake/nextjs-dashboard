@@ -13,7 +13,6 @@ import {
   ChartOptions,
   TooltipItem,
 } from 'chart.js';
-import { CalendarIcon } from '@heroicons/react/24/outline';
 import { lusitana } from '@/app/ui/fonts';
 import { Revenue } from '@/app/lib/definitions';
 import { useState, useEffect } from 'react';
